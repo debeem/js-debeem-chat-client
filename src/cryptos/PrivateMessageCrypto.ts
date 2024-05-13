@@ -2,7 +2,7 @@ import { ChatRoomEntityItem } from "../entities/ChatRoomEntity";
 import { ChatType } from "../models/messages/SendMessageRequest";
 import _ from "lodash";
 import { ethers, isAddress } from "ethers";
-import { AesCrypto } from "debeem-crypto";
+import { AesCrypto } from "debeem-cipher";
 import { isHexString } from "ethers";
 
 /**

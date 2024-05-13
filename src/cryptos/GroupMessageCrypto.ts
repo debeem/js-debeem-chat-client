@@ -1,7 +1,7 @@
 import { ChatRoomEntityItem } from "../entities/ChatRoomEntity";
 import _ from "lodash";
 import { ChatType } from "../models/messages/SendMessageRequest";
-import { AesCrypto } from "debeem-crypto";
+import { AesCrypto } from "debeem-cipher";
 import { ChatRoomStorageService } from "../storages/ChatRoomStorageService";
 
 /**

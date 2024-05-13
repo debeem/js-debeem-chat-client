@@ -2,7 +2,7 @@ import { IDBPDatabase } from "idb/build/entry";
 import { openDB, StoreNames } from "idb";
 import { StorageEntity } from "../entities/StorageEntity";
 import { PageUtil, TypeUtil } from "debeem-utils";
-import { AesCrypto } from "debeem-crypto";
+import { AesCrypto } from "debeem-cipher";
 import { ConditionCallback, HandlerCallback, IStorageService } from "./IStorageService";
 import { PaginationOptions } from "../models/PaginationOptions";
 import { TestUtil } from "debeem-utils";
