@@ -30,8 +30,23 @@ export class ClientConnect
 	receiveMessageCallback ! : ClientReceiveMessageCallback;
 	chatRoomStorageService ! : ChatRoomStorageService;
 
+	/**
+	 *	@param serverUrl	{string}
+	 *	@param receiveMessageCallback
+	 */
 	constructor( serverUrl : string, receiveMessageCallback : ClientReceiveMessageCallback )
 	{
+		//
+		//	documentation:
+		//	https://socket.io/docs/v3/client-initialization/
+		//
+		//	the following forms are similar
+		//	const socket = io( "https://server-domain.com" );
+		//	const socket = io( "wss://server-domain.com" );
+		//
+		//	only in the browser when the page is served over https (will not work in Node.js)
+		//	const socket = io( "server-domain.com" );
+		//
 		if ( ! _.isString( serverUrl ) || _.isEmpty( serverUrl ) )
 		{
 			throw new Error( `invalid serverUrl` );
