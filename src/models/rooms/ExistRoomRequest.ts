@@ -1,4 +1,4 @@
-export type ExistInRoomRequest =
+export type ExistRoomRequest =
 {
 	/**
 	 * 	room number of a string type

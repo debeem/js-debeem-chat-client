@@ -1,6 +1,6 @@
 import { BaseResponse } from "../BaseResponse";
 
-export interface ExistInRoomResponse extends BaseResponse
+export interface ExistRoomResponse extends BaseResponse
 {
 	success : boolean;
 }

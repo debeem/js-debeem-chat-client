@@ -11,14 +11,20 @@ import { VaLeaveRoomRequest } from "./validators/VaLeaveRoomRequest";
 import { VaSendMessageRequest } from "./validators/VaSendMessageRequest";
 import { ResponseCallback } from "./models/callbacks/ResponseCallback";
 import { ClientReceiveMessageCallback } from "./models/callbacks/ClientReceiveMessageCallback";
-import { ExistInRoomRequest } from "./models/rooms/ExistInRoomRequest";
-import { VaExistInRoomRequest } from "./validators/VaExistInRoomRequest";
+import { ExistRoomRequest } from "./models/rooms/ExistRoomRequest";
+import { VaExistRoomRequest } from "./validators/VaExistRoomRequest";
 import { PullMessageRequest } from "./models/messages/PullMessageRequest";
 import { VaPullMessageRequest } from "./validators/VaPullMessageRequest";
 import { PrivateMessageBuilder } from "./builders/PrivateMessageBuilder";
 import { GroupMessageBuilder } from "./builders/GroupMessageBuilder";
 import { CountMessageRequest } from "./models/messages/CountMessageRequest";
 import { VaCountMessageRequest } from "./validators/VaCountMessageRequest";
+import { TestUtil } from "debeem-utils";
+import { isHexString } from "ethers";
+import { ExistRoomResponse } from "./models/rooms/ExistRoomResponse";
+import { SendMessageResponse } from "./models/messages/SendMessageResponse";
+import { PullMessageResponse } from "./models/messages/PullMessageResponse";
+import { CountMessageResponse } from "./models/messages/CountMessageResponse";
 
 /**
  * 	@class
@@ -29,6 +35,12 @@ export class ClientConnect
 	socket ! : Socket;
 	receiveMessageCallback ! : ClientReceiveMessageCallback;
 	chatRoomStorageService ! : ChatRoomStorageService;
+
+	/**
+	 *	the timeout value of the .emit method
+	 */
+	emitTimeout : number = 2000;
+
 
 	/**
 	 *	@param serverUrl	{string}
@@ -49,7 +61,7 @@ export class ClientConnect
 		//
 		if ( ! _.isString( serverUrl ) || _.isEmpty( serverUrl ) )
 		{
-			throw new Error( `invalid serverUrl` );
+			throw new Error( `${ this.constructor.name }.constructor :: invalid serverUrl` );
 		}
 
 		this.serverUrl = serverUrl;
@@ -60,6 +72,22 @@ export class ClientConnect
 		//	...
 		this._setupEvents();
 	}
+
+	/**
+	 * 	update emitTimeout
+	 *	@param emitTimeout	{number}
+	 */
+	public setEmitTimeout( emitTimeout : number ) : boolean
+	{
+		if ( ! _.isNumber( emitTimeout ) || emitTimeout <= 0 )
+		{
+			return false;
+		}
+
+		this.emitTimeout = emitTimeout;
+		return true;
+	}
+
 
 	/**
 	 * 	setup
@@ -151,10 +179,39 @@ export class ClientConnect
 		const errorJoinRoomRequest : string | null = VaJoinRoomRequest.validateJoinRoomRequest( joinRoomRequest );
 		if ( null !== errorJoinRoomRequest )
 		{
-			throw new Error( errorJoinRoomRequest );
+			throw new Error( `${ this.constructor.name }.joinRoom :: ${ errorJoinRoomRequest }` );
 		}
 		this.send( `room-join`, joinRoomRequest, callback );
 	}
+
+	/**
+	 * 	asynchronously join a room
+	 *
+	 *	@param joinRoomRequest	{JoinRoomRequest}
+	 *	@returns {Promise< JoinRoomResponse | null >}
+	 */
+	public joinRoomAsync( joinRoomRequest : JoinRoomRequest ) : Promise< JoinRoomResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				const errorJoinRoomRequest : string | null = VaJoinRoomRequest.validateJoinRoomRequest( joinRoomRequest );
+				if ( null !== errorJoinRoomRequest )
+				{
+					return reject( `${ this.constructor.name }.joinRoomAsync :: ${ errorJoinRoomRequest }` );
+				}
+
+				const response : any = await this.sendAsync( `room-join`, joinRoomRequest );
+				resolve( response ? response as JoinRoomResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
 
 	/**
 	 *	@param leaveRoomRequest		{LeaveRoomRequest}
@@ -166,25 +223,97 @@ export class ClientConnect
 		const errorLeaveRoomRequest : string | null = VaLeaveRoomRequest.validateLeaveRoomRequest( leaveRoomRequest );
 		if ( null !== errorLeaveRoomRequest )
 		{
-			throw new Error( errorLeaveRoomRequest );
+			throw new Error( `${ this.constructor.name }.leaveRoom :: ${ errorLeaveRoomRequest }` );
 		}
 		this.send( `room-leave`, leaveRoomRequest, callback );
 	}
 
 	/**
-	 *	@param existInRoomRequest	{ExistInRoomRequest}
+	 * 	asynchronously leave a room
+	 *
+	 *	@param leaveRoomRequest		{LeaveRoomRequest}
+	 *	@returns {Promise<any>}
+	 */
+	public leaveRoomAsync( leaveRoomRequest : LeaveRoomRequest ) : Promise< LeaveRoomResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				const errorLeaveRoomRequest : string | null = VaLeaveRoomRequest.validateLeaveRoomRequest( leaveRoomRequest );
+				if ( null !== errorLeaveRoomRequest )
+				{
+					return reject( `${ this.constructor.name }.leaveRoomAsync :: ${ errorLeaveRoomRequest }` );
+				}
+
+				const response : any = await this.sendAsync( `room-leave`, leaveRoomRequest );
+				resolve( response ? response as LeaveRoomResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
+
+	/**
+	 * 	@deprecated
+	 *
+	 *	@param existInRoomRequest	{ExistRoomRequest}
 	 *	@param [callback]		{ResponseCallback}
 	 *	@returns {void}
 	 */
-	public existInRoom( existInRoomRequest : ExistInRoomRequest, callback ? : ResponseCallback ) : void
+	public existInRoom( existInRoomRequest : ExistRoomRequest, callback ? : ResponseCallback ) : void
 	{
-		const errorExistInRoomRequest : string | null = VaExistInRoomRequest.validateExistInRoomRequest( existInRoomRequest );
+		return this.existRoom( existInRoomRequest, callback );
+	}
+
+	/**
+	 *	check if a room is existed
+	 *
+	 *	@param existInRoomRequest	{ExistRoomRequest}
+	 *	@param [callback]		{ResponseCallback}
+	 *	@returns {void}
+	 */
+	public existRoom( existInRoomRequest : ExistRoomRequest, callback ? : ResponseCallback ) : void
+	{
+		const errorExistInRoomRequest : string | null = VaExistRoomRequest.validateExistRoomRequest( existInRoomRequest );
 		if ( null !== errorExistInRoomRequest )
 		{
-			throw new Error( errorExistInRoomRequest );
+			throw new Error( `${ this.constructor.name }.existRoom :: ${ errorExistInRoomRequest }` );
 		}
 		this.send( `room-exist`, existInRoomRequest, callback );
 	}
+
+	/**
+	 * 	asynchronously check if a room is existed
+	 *
+	 *	@param existInRoomRequest	{ExistRoomRequest}
+	 *	@returns {Promise< ExistRoomResponse | null >}
+	 */
+	public existRoomAsync( existInRoomRequest : ExistRoomRequest ) : Promise< ExistRoomResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				const errorExistInRoomRequest : string | null = VaExistRoomRequest.validateExistRoomRequest( existInRoomRequest );
+				if ( null !== errorExistInRoomRequest )
+				{
+					return reject( `${ this.constructor.name }.existRoomAsync :: ${ errorExistInRoomRequest }` );
+				}
+
+				const response : any = await this.sendAsync( `room-exist`, existInRoomRequest );
+				resolve( response ? response as ExistRoomResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
 
 	/**
 	 *	@param sendMessageRequest	{SendMessageRequest}
@@ -196,12 +325,42 @@ export class ClientConnect
 		const errorSendMessageRequest : string | null = VaSendMessageRequest.validateSendMessageRequest( sendMessageRequest );
 		if ( null !== errorSendMessageRequest )
 		{
-			throw new Error( errorSendMessageRequest );
+			throw new Error( `${ this.constructor.name }.sendMessage :: ${ errorSendMessageRequest }` );
 		}
 
 		//	...
 		this.send( `chat-message`, sendMessageRequest, callback );
 	}
+
+	/**
+	 * 	asynchronously sent chat message
+	 *
+	 *	@param sendMessageRequest	{SendMessageRequest}
+	 *	@returns {Promise< SendMessageResponse | null >}
+	 */
+	public sendMessageAsync( sendMessageRequest : SendMessageRequest ) : Promise< SendMessageResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				const errorSendMessageRequest : string | null = VaSendMessageRequest.validateSendMessageRequest( sendMessageRequest );
+				if ( null !== errorSendMessageRequest )
+				{
+					return reject( `${ this.constructor.name }.sendMessageAsync :: ${ errorSendMessageRequest }` );
+				}
+
+				//	...
+				const response : any = await this.sendAsync( `chat-message`, sendMessageRequest );
+				resolve( response ? response as SendMessageResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
 
 	/**
 	 *	@param privateKey	{string}
@@ -219,6 +378,41 @@ export class ClientConnect
 			throw new Error( err );
 		});
 	}
+
+	/**
+	 *	asynchronously send private message
+	 *
+	 * 	@param privateKey	{string}
+	 * 	@param chatMessage	{ChatMessage}
+	 * 	@returns {Promise< SendMessageResponse | null >}
+	 */
+	public sendPrivateMessageAsync( privateKey : string, chatMessage : ChatMessage ) : Promise< SendMessageResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				if ( ! isHexString( privateKey, 32 ) )
+				{
+					return reject( `${ this.constructor.name }.sendPrivateMessageAsync :: invalid privateKey` );
+				}
+				if ( ! _.isObject( chatMessage ) )
+				{
+					return reject( `${ this.constructor.name }.sendPrivateMessageAsync :: invalid chatMessage` );
+				}
+
+				//	...
+				const sendMessageRequest : SendMessageRequest = await new PrivateMessageBuilder().buildMessage( privateKey, chatMessage );
+				const response : any = await this.sendMessageAsync( sendMessageRequest );
+				resolve( response ? response as SendMessageResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
 
 	/**
 	 *	@param privateKey	{string}
@@ -239,6 +433,32 @@ export class ClientConnect
 	}
 
 	/**
+	 * 	asynchronously send group message
+	 *
+	 *	@param privateKey	{string}
+	 *	@param chatMessage	{ChatMessage}
+	 *	@param pinCode		{string}
+	 *	@returns {Promise< SendMessageResponse | null >}
+	 */
+	public sendGroupMessageAsync( privateKey : string, chatMessage : ChatMessage, pinCode : string ) : Promise< SendMessageResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				const sendMessageRequest : SendMessageRequest = await new GroupMessageBuilder().buildMessage( privateKey, chatMessage, pinCode );
+				const response : any = await this.sendMessageAsync( sendMessageRequest );
+				resolve( response ? response as SendMessageResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
+
+	/**
 	 *	@param pullMessageRequest	{PullMessageRequest}
 	 *	@param [callback]		{ResponseCallback}
 	 *	@returns {void}
@@ -248,12 +468,42 @@ export class ClientConnect
 		const errorPullMessageRequest : string | null = VaPullMessageRequest.validatePullMessageRequest( pullMessageRequest );
 		if ( null !== errorPullMessageRequest )
 		{
-			throw new Error( errorPullMessageRequest );
+			throw new Error( `${ this.constructor.name }.pullMessage :: ${ errorPullMessageRequest }` );
 		}
 
 		//	...
 		this.send( `pull-message`, pullMessageRequest, callback );
 	}
+
+	/**
+	 *	asynchronously pull message
+	 *
+	 *	@param pullMessageRequest	{PullMessageRequest}
+	 *	@returns {Promise< PullMessageResponse | null >}
+	 */
+	public pullMessageAsync( pullMessageRequest : PullMessageRequest ) : Promise< PullMessageResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				const errorPullMessageRequest : string | null = VaPullMessageRequest.validatePullMessageRequest( pullMessageRequest );
+				if ( null !== errorPullMessageRequest )
+				{
+					return reject( `${ this.constructor.name }.pullMessageAsync :: ${ errorPullMessageRequest }` );
+				}
+
+				//	...
+				const response : any = await this.sendAsync( `pull-message`, pullMessageRequest );
+				resolve( response ? response as PullMessageResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
 
 	/**
 	 *	@param countMessageRequest	{CountMessageRequest}
@@ -265,15 +515,47 @@ export class ClientConnect
 		const errorCountMessageRequest : string | null = VaCountMessageRequest.validateCountMessageRequest( countMessageRequest );
 		if ( null !== errorCountMessageRequest )
 		{
-			throw new Error( errorCountMessageRequest );
+			throw new Error( `${ this.constructor.name }.countMessage :: ${ errorCountMessageRequest }` );
 		}
 
 		//	...
 		this.send( `count-message`, countMessageRequest, callback );
 	}
 
+	/**
+	 * 	asynchronously count message
+	 *
+	 *	@param countMessageRequest	{CountMessageRequest}
+	 *	@returns {Promise< CountMessageResponse | null >}
+	 */
+	public countMessageAsync( countMessageRequest : CountMessageRequest ) : Promise< CountMessageResponse | null >
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				const errorCountMessageRequest : string | null = VaCountMessageRequest.validateCountMessageRequest( countMessageRequest );
+				if ( null !== errorCountMessageRequest )
+				{
+					return reject( `${ this.constructor.name }.countMessageAsync :: ${ errorCountMessageRequest }` );
+				}
+
+				//	...
+				const response : any = await this.sendAsync( `count-message`, countMessageRequest );
+				resolve( response ? response as CountMessageResponse : null );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
+	}
+
+
 
 	/**
+	 * 	send event
+	 *
 	 *	@param eventName	{string}
 	 *	@param arg		{any}
 	 *	@param [callback]	{ResponseCallback}
@@ -285,7 +567,7 @@ export class ClientConnect
 		 * 	@description
 		 * 	https://socket.io/docs/v4/
 		 */
-		this.socket.timeout( 2000 ).emit( eventName, arg, ( err : any, response : any ) =>
+		this.socket.timeout( this.emitTimeout ).emit( eventName, arg, ( err : any, response : any ) =>
 		{
 			if ( err )
 			{
@@ -299,7 +581,7 @@ export class ClientConnect
 				}
 				if ( retry > 3 )
 				{
-					throw new Error( `failed to send event : ${ eventName }, arg: ${ arg }`, );
+					throw new Error( `${ this.constructor.name }.send :: failed to send event : ${ eventName }, arg: ${ arg }`, );
 				}
 
 				//	...
@@ -310,5 +592,56 @@ export class ClientConnect
 				callback( response );
 			}
 		} );
+	}
+
+	/**
+	 * 	asynchronously send event
+	 *
+	 *	@param eventName	{string}
+	 *	@param arg		{any}
+	 *	@param [retry]		{number}
+	 *	@returns {Promise<any>}
+	 */
+	public sendAsync( eventName : string, arg : any, retry ? : number ) : Promise<any>
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				/**
+				 * 	@description
+				 * 	https://socket.io/docs/v4/
+				 */
+				this.socket.timeout( this.emitTimeout ).emit( eventName, arg, async ( err : any, response : any ) =>
+				{
+					if ( err )
+					{
+						//
+						//	the other side did not acknowledge the event in the given delay.
+						//	let's retry
+						//
+						if ( undefined === retry )
+						{
+							retry = 0;
+						}
+						if ( retry > 3 )
+						{
+							return reject( `${ this.constructor.name }.sendAsync :: failed to send event : ${ eventName }, arg: ${ arg }` );
+						}
+
+						//	...
+						await TestUtil.sleep( 10 );
+						response = await this.sendAsync( eventName, arg, ++retry );
+					}
+
+					//	...
+					resolve( response );
+				} );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		});
 	}
 }
