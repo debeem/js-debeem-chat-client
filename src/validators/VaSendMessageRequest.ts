@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { EtherWallet } from "web3id";
+import { EtherWallet } from "debeem-id";
 import { ChatType, MessageType, SendMessageRequest } from "../models/messages/SendMessageRequest";
 import { Constants} from "../constants/Constants";
 import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";

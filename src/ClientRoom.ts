@@ -5,7 +5,7 @@ import { VaCreateChatRoom } from "./validators/VaCreateChatRoom";
 import { ChatRoomStorageService } from "./storages/ChatRoomStorageService";
 import { clientInviteRequestInitV1, InviteRequest } from "./models/rooms/InviteRequest";
 import { VaChatRoomEntityItem } from "./validators/VaChatRoomEntityItem";
-import { EtherWallet } from "web3id";
+import { EtherWallet } from "debeem-id";
 import { RoomUtil } from "./utils/RoomUtil";
 import { VaChatRoomMember } from "./validators/VaChatRoomMember";
 import { isAddress, isHexString } from "ethers";

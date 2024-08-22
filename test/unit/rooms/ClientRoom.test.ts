@@ -10,7 +10,7 @@ import {
 	InviteRequest,
 	RoomUtil
 } from "../../../src";
-import { EtherWallet } from "web3id";
+import { EtherWallet } from "debeem-id";
 import _ from "lodash";
 
 

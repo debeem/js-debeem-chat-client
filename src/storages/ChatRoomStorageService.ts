@@ -9,7 +9,7 @@ import { VaChatRoomMember } from "../validators/VaChatRoomMember";
 import { ChatRoomEntityItem, ChatRoomMember, ChatRoomMembers } from "../entities/ChatRoomEntity";
 import { AbstractStorageService } from "./AbstractStorageService";
 import { IStorageService } from "./IStorageService";
-import { EtherWallet } from "web3id";
+import { EtherWallet } from "debeem-id";
 import { VaChatRoomEntityItem } from "../validators/VaChatRoomEntityItem";
 
 

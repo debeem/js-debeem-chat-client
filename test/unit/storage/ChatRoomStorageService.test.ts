@@ -7,7 +7,7 @@ import {
 	ChatRoomMemberType
 } from "../../../src";
 import { ChatType } from "../../../src";
-import { EtherWallet } from "web3id";
+import { EtherWallet } from "debeem-id";
 import _ from "lodash";
 import { VaChatRoomEntityItem } from "../../../src";
 import { RoomUtil } from "../../../src";

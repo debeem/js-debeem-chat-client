@@ -1,4 +1,4 @@
-import { EtherWallet } from "web3id";
+import { EtherWallet } from "debeem-id";
 import _ from "lodash";
 import { Constants } from "../constants/Constants";
 import { ChatRoomMember, ChatRoomMemberType } from "../entities/ChatRoomEntity";

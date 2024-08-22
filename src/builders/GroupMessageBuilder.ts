@@ -4,7 +4,7 @@ import { isAddress, isHexString } from "ethers";
 import _ from "lodash";
 import { VaChatRoomEntityItem } from "../validators/VaChatRoomEntityItem";
 import { ChatRoomEntityItem } from "../entities/ChatRoomEntity";
-import { Web3Digester, Web3Signer } from "web3id";
+import { Web3Digester, Web3Signer } from "debeem-id";
 import { GroupMessageCrypto } from "../cryptos/GroupMessageCrypto";
 
 /**
