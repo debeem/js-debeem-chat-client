@@ -8,7 +8,7 @@ import {
 } from "../../../src";
 import { ChatType } from "../../../src";
 import { EtherWallet } from "debeem-id";
-import _ from "lodash";
+import _, { assignWith, max } from "lodash";
 import { VaChatRoomEntityItem } from "../../../src";
 import { RoomUtil } from "../../../src";
 
@@ -40,12 +40,13 @@ describe( "ChatRoomStorageService", () =>
 
 	describe( "Test saving Private Chat Room", () =>
 	{
-		const chatRoomStorageService = new ChatRoomStorageService( `my password` );
-		let randomRoomId = RoomUtil.generateRandomRoomId( ChatType.PRIVATE );
-		//console.log( `randomRoomId :`, randomRoomId );
-
 		it( "should put a Private Chat Room to database", async () =>
 		{
+			const chatRoomStorageService = new ChatRoomStorageService( `my password` );
+			let randomRoomId = RoomUtil.generateRandomRoomId( ChatType.PRIVATE );
+			//console.log( `randomRoomId :`, randomRoomId );
+
+			//	...
 			const BobWalletObj = EtherWallet.createWalletFromMnemonic();
 			const AliceWalletObj = EtherWallet.createWalletFromMnemonic();
 			const passwordValue = await chatRoomStorageService.encryptPassword( '', '' );
@@ -108,10 +109,137 @@ describe( "ChatRoomStorageService", () =>
 				}
 			}
 		});
-		it( "should delete the object just saved", async () =>
+		// it( "should delete the object just saved", async () =>
+		// {
+		// 	const deleted : boolean = await chatRoomStorageService.delete( randomRoomId );
+		// 	expect( deleted ).toBeTruthy();
+		// });
+
+		it( "should delete rooms", async () =>
 		{
-			const deleted : boolean = await chatRoomStorageService.delete( randomRoomId );
-			expect( deleted ).toBeTruthy();
+			const chatRoomStorageService = new ChatRoomStorageService( `my password` );
+			await chatRoomStorageService.clear();
+
+			let roomItems : Array< ChatRoomEntityItem > = [];
+
+			const maxRoomCount = 10;
+			for ( let i = 0; i < maxRoomCount; i ++ )
+			{
+				let randomRoomId = RoomUtil.generateRandomRoomId( ChatType.PRIVATE );
+
+				const walletObjAlice = EtherWallet.createWalletFromMnemonic();
+				const walletObjBob = EtherWallet.createWalletFromMnemonic();
+				const passwordValue = await chatRoomStorageService.encryptPassword( '', '' );
+
+				walletObjBob.address = walletObjBob.address.trim().toLowerCase();
+				walletObjAlice.address = walletObjAlice.address.trim().toLowerCase();
+				const item : ChatRoomEntityItem = {
+					wallet : walletObjBob.address,
+					chatType : ChatType.PRIVATE,
+					name : `Temp Chat Room[${ i + 1 }]`,
+					roomId : randomRoomId,
+					password : passwordValue,
+					timestamp : new Date().getTime(),
+					members : {
+						[ walletObjBob.address ] : {
+							memberType : ChatRoomMemberType.OWNER,
+							wallet : walletObjBob.address,
+							publicKey : walletObjBob.publicKey,
+							userName : 'Bob',
+							userAvatar : 'https://www.aaa/avatar.png',
+							timestamp : new Date().getTime()
+						},
+						[ walletObjAlice.address ] : {
+							memberType : ChatRoomMemberType.MEMBER,
+							wallet : walletObjAlice.address,
+							publicKey : walletObjAlice.publicKey,
+							userName : 'Alice',
+							userAvatar : 'https://www.aaa/avatar.png',
+							timestamp : new Date().getTime()
+						}
+					},
+				};
+				const key : string | null = chatRoomStorageService.getKeyByItem( item );
+				expect( key ).toBeDefined();
+				expect( _.isString( key ) && ! _.isEmpty( key ) ).toBeTruthy();
+				if ( key )
+				{
+					const saved : boolean = await chatRoomStorageService.put( key, item );
+					expect( saved ).toBeTruthy();
+				}
+
+				//	...
+				roomItems.push( item );
+			}
+
+			//
+			//	query all 1
+			//
+			const allRoomItems1 : Array<ChatRoomEntityItem | null > | null = await chatRoomStorageService.getAll();
+			expect( allRoomItems1 ).not.toBeNull();
+			expect( Array.isArray( allRoomItems1 ) ).toBeTruthy();
+			expect( allRoomItems1 && maxRoomCount === allRoomItems1.length ).toBeTruthy();
+
+			//
+			//	delete the first two item
+			//
+			for ( let i = 0; i < 2; i ++ )
+			{
+				const item : ChatRoomEntityItem = roomItems[ i ];
+				const key : string | null = chatRoomStorageService.getKeyByItem( item );
+				if ( key )
+				{
+					const deleted : boolean = await chatRoomStorageService.delete( key );
+					expect( deleted ).toBeTruthy();
+
+					//	remove 1 item from the index
+					roomItems.splice( i, 1 );
+				}
+			}
+			expect( roomItems.length ).toBe( maxRoomCount - 2 );
+
+			//
+			//	query all 2
+			//
+			const allRoomItems2 : Array<ChatRoomEntityItem | null > | null = await chatRoomStorageService.getAll();
+			//console.log( `allRoomItems2 :`, allRoomItems2 );
+			expect( allRoomItems2 ).not.toBeNull();
+			expect( Array.isArray( allRoomItems2 ) ).toBeTruthy();
+			expect( allRoomItems2 && roomItems.length === allRoomItems2.length ).toBeTruthy();
+			expect( allRoomItems2 && maxRoomCount - 2 === allRoomItems2.length ).toBeTruthy();
+
+
+			//
+			//	randomly delete two item
+			//
+			for ( let i = 0; i < 2; i ++ )
+			{
+				const count = await chatRoomStorageService.count();
+				const randomIndex = Math.floor(Math.random() * count );
+
+				const item : ChatRoomEntityItem = roomItems[ randomIndex ];
+				const key : string | null = chatRoomStorageService.getKeyByItem( item );
+				if ( key )
+				{
+					const deleted : boolean = await chatRoomStorageService.delete( key );
+					expect( deleted ).toBeTruthy();
+
+					//	remove 1 item from the index
+					roomItems.splice( randomIndex, 1 );
+				}
+			}
+			expect( roomItems.length ).toBe( maxRoomCount - 4 );
+
+
+			//
+			//	query all 3
+			//
+			const allRoomItems3 : Array<ChatRoomEntityItem | null > | null = await chatRoomStorageService.getAll();
+			//console.log( `allRoomItems3 :`, allRoomItems3 );
+			expect( allRoomItems3 ).not.toBeNull();
+			expect( Array.isArray( allRoomItems3 ) ).toBeTruthy();
+			expect( allRoomItems3 && roomItems.length === allRoomItems3.length ).toBeTruthy();
+			expect( allRoomItems3 && maxRoomCount - 4 === allRoomItems3.length ).toBeTruthy();
 		});
 	} );
 
