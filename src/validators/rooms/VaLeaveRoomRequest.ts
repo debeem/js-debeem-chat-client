@@ -1,5 +1,4 @@
-import { LeaveRoomRequest } from "../models/rooms/LeaveRoomRequest";
-import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";
+import { VaChatRoomEntityItem } from "../VaChatRoomEntityItem";
 
 /**
  * 	@class
@@ -7,10 +6,10 @@ import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";
 export class VaLeaveRoomRequest
 {
 	/**
-	 *	@param leaveRequest	{LeaveRoomRequest}
+	 *	@param leaveRequest	{any}
 	 *	@returns {string | null}
 	 */
-	static validateLeaveRoomRequest( leaveRequest : LeaveRoomRequest ) : string | null
+	static validateLeaveRoomRequest( leaveRequest : any ) : string | null
 	{
 		if ( ! leaveRequest )
 		{

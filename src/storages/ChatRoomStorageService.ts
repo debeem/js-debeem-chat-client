@@ -113,7 +113,7 @@ export class ChatRoomStorageService extends AbstractStorageService<ChatRoomEntit
 	}
 
 	/**
-	 * 	get the storage key
+	 * 	get the storages key
 	 *	@param value	{ChatRoomEntityItem}
 	 *	@returns {string | null}
 	 */
@@ -130,7 +130,7 @@ export class ChatRoomStorageService extends AbstractStorageService<ChatRoomEntit
 	}
 
 	/**
-	 * 	get the storage key
+	 * 	get the storages key
 	 * 	@param wallet	{string}
 	 * 	@param roomId	{string}
 	 * 	@returns {string | null}

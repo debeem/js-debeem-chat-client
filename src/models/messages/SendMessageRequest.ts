@@ -1,3 +1,6 @@
+import { BaseRequest } from "../BaseRequest";
+
+
 export enum ChatType
 {
 	UNKNOWN = 0,
@@ -28,7 +31,7 @@ export enum MessageType
 	SYSTEM = 2
 }
 
-export type ChatMessage =
+export interface ChatMessage extends BaseRequest
 {
 	/**
 	 * 	chat type
@@ -83,29 +86,7 @@ export type ChatMessage =
 	 * 	@description max length was limited to 4096
 	 */
 	body : string;
-
-	/**
-	 * 	timestamp in time zone 0 when the message was created,
-	 * 	specified by the client
-	 * 	@type {number}
-	 */
-	timestamp: number;
-
-	/**
-	 * 	hash value of the packet
-	 * 	@type {string}
-	 * 	@description hex string consisting of 64 characters starting with 0x
-	 */
-	hash: string;
-
-	/**
-	 * 	signature of a message by the message creator
-	 * 	using his or her own wallet’s private key.
-	 * 	@type {string}
-	 * 	@description hex string consisting of 132 characters starting with 0x
-	 */
-	sig: string;
-};
+}
 
 export type SendMessageRequest =
 {

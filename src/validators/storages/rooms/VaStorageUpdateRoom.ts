@@ -1,15 +1,15 @@
 import _ from "lodash";
-import { CreateChatRoom } from "../models/rooms/CreateChatRoom";
-import { ChatType } from "../models/messages/SendMessageRequest";
-import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";
-import { ChatRoomMember } from "../entities/ChatRoomEntity";
-import { RoomUtil } from "../utils/RoomUtil";
+import { CreateRoomRequest } from "../models/storages/body/rooms/CreateGroupChatPayload";
+import { ChatType } from "../../../models/messages/SendMessageRequest";
+import { VaChatRoomEntityItem } from "../../VaChatRoomEntityItem";
+import { ChatRoomMember } from "../../../entities/ChatRoomEntity";
+import { RoomUtil } from "../../../utils/RoomUtil";
 import { isHexString } from "ethers";
 
 /**
  * 	@class
  */
-export class VaCreateChatRoom
+export class VaStorageCreateRoom
 {
 	/**
 	 *	@param encryptionKey	{any}
@@ -48,10 +48,10 @@ export class VaCreateChatRoom
 	}
 
 	/**
-	 *	@param createChatRoomOptions	{CreateChatRoom}
+	 *	@param createChatRoomOptions	{CreateRoomRequest}
 	 *	@returns {string | null}
 	 */
-	static validateCreateChatRoom( createChatRoomOptions : CreateChatRoom ) : string | null
+	static validateCreateChatRoom( createChatRoomOptions : CreateRoomRequest ) : string | null
 	{
 		if ( ! createChatRoomOptions )
 		{

@@ -128,7 +128,7 @@ export class ChatHistoryStorageService extends AbstractStorageService<ChatHistor
 	}
 
 	/**
-	 * 	get a storage key
+	 * 	get a storages key
 	 *	@param value	{ChatHistoryEntityItem}
 	 *	@returns {string | null}
 	 */

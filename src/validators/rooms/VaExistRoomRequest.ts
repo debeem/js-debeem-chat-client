@@ -1,5 +1,4 @@
-import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";
-import { ExistRoomRequest } from "../models/rooms/ExistRoomRequest";
+import { VaChatRoomEntityItem } from "../VaChatRoomEntityItem";
 
 /**
  * 	@class
@@ -7,10 +6,10 @@ import { ExistRoomRequest } from "../models/rooms/ExistRoomRequest";
 export class VaExistRoomRequest
 {
 	/**
-	 *	@param existRoomRequest	{ExistRoomRequest}
+	 *	@param existRoomRequest	{any}
 	 *	@returns {string | null}
 	 */
-	static validateExistRoomRequest( existRoomRequest : ExistRoomRequest ) : string | null
+	static validateExistRoomRequest( existRoomRequest : any ) : string | null
 	{
 		if ( ! existRoomRequest )
 		{

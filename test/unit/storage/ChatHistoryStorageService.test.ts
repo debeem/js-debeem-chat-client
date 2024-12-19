@@ -59,7 +59,7 @@ describe( "ChatHistoryStorageService", () =>
 			//         roomId: 'g0x9dac6a85f48d2967480622eed576e941573c874e',
 			//         userName: 'User-0',
 			//         userAvatar: 'https://www.a.com/0.png',
-			//         body: "it's the body",
+			//         payloads: "it's the payloads",
 			//         timestamp: 1699337767806
 			//       }
 			//     ]
@@ -104,7 +104,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-4',
 				//         userAvatar: 'https://www.a.com/4.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522835
 				//       },
 				//       {
@@ -112,7 +112,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-62',
 				//         userAvatar: 'https://www.a.com/62.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522847
 				//       },
 				//       {
@@ -120,7 +120,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-71',
 				//         userAvatar: 'https://www.a.com/71.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522848
 				//       },
 				//       {
@@ -128,7 +128,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-72',
 				//         userAvatar: 'https://www.a.com/72.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522849
 				//       },
 				//       {
@@ -136,7 +136,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-10',
 				//         userAvatar: 'https://www.a.com/10.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522836
 				//       },
 				//       {
@@ -144,7 +144,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-5',
 				//         userAvatar: 'https://www.a.com/5.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522835
 				//       },
 				//       {
@@ -152,7 +152,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-67',
 				//         userAvatar: 'https://www.a.com/67.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522848
 				//       },
 				//       {
@@ -160,7 +160,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-12',
 				//         userAvatar: 'https://www.a.com/12.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522836
 				//       },
 				//       {
@@ -168,7 +168,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-21',
 				//         userAvatar: 'https://www.a.com/21.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522838
 				//       },
 				//       {
@@ -176,7 +176,7 @@ describe( "ChatHistoryStorageService", () =>
 				//         roomId: 'g0xe94dd9b1d264f516a17db9a2afdea9f4f496fd6a',
 				//         userName: 'User-20',
 				//         userAvatar: 'https://www.a.com/20.png',
-				//         body: "it's the body",
+				//         payloads: "it's the payloads",
 				//         timestamp: 1699342522838
 				//       }
 				//     ]

@@ -52,7 +52,7 @@ export class GroupMessageBuilder extends BaseMessageBuilder
 					return reject( `${ this.constructor.name } :: room not found` );
 				}
 
-				//	encrypt body
+				//	encrypt payloads
 				chatMessage.body = await new GroupMessageCrypto().encryptMessage(
 					chatMessage.body,
 					roomItem,

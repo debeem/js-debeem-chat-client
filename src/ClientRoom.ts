@@ -1,9 +1,9 @@
 import _ from "lodash";
 import { ChatRoomEntityItem, ChatRoomMember, ChatRoomMembers, ChatRoomMemberType } from "./entities/ChatRoomEntity";
-import { CreateChatRoom } from "./models/rooms/CreateChatRoom";
-import { VaCreateChatRoom } from "./validators/VaCreateChatRoom";
+import { CreateRoomRequest } from "./models/storages/body/rooms/CreateGroupChatPayload";
+import { VaStorageCreateRoom } from "./validators/storages/rooms/VaStorageCreateRoom";
 import { ChatRoomStorageService } from "./storages/ChatRoomStorageService";
-import { clientInviteRequestInitV1, InviteRequest } from "./models/rooms/InviteRequest";
+import { clientInviteRequestInitV1, InviteRequest } from "./models/storages/body/rooms/InviteRequest";
 import { VaChatRoomEntityItem } from "./validators/VaChatRoomEntityItem";
 import { EtherWallet } from "debeem-id";
 import { RoomUtil } from "./utils/RoomUtil";
@@ -28,22 +28,22 @@ export class ClientRoom
 
 	/**
 	 * 	create chat room
-	 *	@param createChatRoomOptions	{CreateChatRoom}
+	 *	@param createChatRoomOptions	{CreateRoomRequest}
 	 *	@returns {Promise<ChatRoomEntityItem>}
 	 */
-	public createRoom( createChatRoomOptions : CreateChatRoom ) : Promise<ChatRoomEntityItem>
+	public createRoom( createChatRoomOptions : CreateRoomRequest ) : Promise<ChatRoomEntityItem>
 	{
 		return new Promise( async ( resolve, reject ) =>
 		{
 			try
 			{
-				const errorCreateChatRoom : string | null = VaCreateChatRoom.validateCreateChatRoom( createChatRoomOptions );
+				const errorCreateChatRoom : string | null = VaStorageCreateRoom.validateCreateChatRoom( createChatRoomOptions );
 				if ( null !== errorCreateChatRoom )
 				{
 					return reject( `ClientRoom.createRoom :: ${ errorCreateChatRoom }` );
 				}
 
-				if ( null !== VaCreateChatRoom.isValidEncryptionKey( createChatRoomOptions.encryptionKey ) )
+				if ( null !== VaStorageCreateRoom.isValidEncryptionKey( createChatRoomOptions.encryptionKey ) )
 				{
 					createChatRoomOptions.encryptionKey = RoomUtil.generateRandomEncryptionKey();
 				}

@@ -30,7 +30,7 @@ export interface ChatHistoryEntityItem
 
 	/**
 	 * 	@type {string}
-	 * 	@description body text
+	 * 	@description payloads text
 	 */
 	body : string;
 
@@ -63,7 +63,7 @@ export interface ChatHistoryEntity extends DBSchema
 	// 		roomId : string;
 	// 		userName : string;
 	// 		userAvatar? : string;
-	// 		body : string;
+	// 		payloads : string;
 	// 		read? : boolean;
 	// 		timestamp : number;
 	// 	};

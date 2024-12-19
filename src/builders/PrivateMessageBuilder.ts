@@ -52,7 +52,7 @@ export class PrivateMessageBuilder extends BaseMessageBuilder
 					return reject( `${ this.constructor.name } :: room not found` );
 				}
 
-				//	encrypt body
+				//	encrypt payloads
 				chatMessage.body = await new PrivateMessageCrypto().encryptMessage(
 					chatMessage.body,
 					roomItem,

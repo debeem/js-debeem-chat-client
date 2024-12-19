@@ -6,7 +6,7 @@ import {
 	ChatRoomMemberType, ChatRoomStorageService,
 	ChatType,
 	ClientRoom,
-	CreateChatRoom,
+	CreateRoomRequest,
 	InviteRequest,
 	RoomUtil
 } from "../../../src";
@@ -40,7 +40,7 @@ describe( "ClientRoom", () =>
 			BobWalletObj.address = BobWalletObj.address.trim().toLowerCase();
 			AliceWalletObj.address = AliceWalletObj.address.trim().toLowerCase();
 
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : BobWalletObj.address,
 				chatType : ChatType.PRIVATE,
 				//encryptionKey : encryptionKey,
@@ -93,7 +93,7 @@ describe( "ClientRoom", () =>
 			BobWalletObj.address = BobWalletObj.address.trim().toLowerCase();
 			AliceWalletObj.address = AliceWalletObj.address.trim().toLowerCase();
 
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : BobWalletObj.address,
 				chatType : ChatType.PRIVATE,
 				//encryptionKey : encryptionKey,
@@ -144,7 +144,7 @@ describe( "ClientRoom", () =>
 
 			//	...
 			const clientRoom : ClientRoom = new ClientRoom();
-			let roomItems : Array< CreateChatRoom > = [];
+			let roomItems : Array< CreateRoomRequest > = [];
 
 			const maxRoomCount = 10;
 			const walletObjBob = EtherWallet.createWalletFromMnemonic();
@@ -156,7 +156,7 @@ describe( "ClientRoom", () =>
 				walletObjBob.address = walletObjBob.address.trim().toLowerCase();
 				walletObjRandom.address = walletObjRandom.address.trim().toLowerCase();
 
-				const createChatRoom : CreateChatRoom = {
+				const createChatRoom : CreateRoomRequest = {
 					wallet : walletObjBob.address,
 					chatType : ChatType.PRIVATE,
 					name : `Chat Room ${ i }`,
@@ -212,7 +212,7 @@ describe( "ClientRoom", () =>
 			//
 			for ( let i = 0; i < 2; i ++ )
 			{
-				const item : CreateChatRoom = roomItems[ i ];
+				const item : CreateRoomRequest = roomItems[ i ];
 				expect( !! item ).toBeTruthy();
 				expect( !! item.roomId ).toBeTruthy();
 
@@ -249,7 +249,7 @@ describe( "ClientRoom", () =>
 				expect( count ).toBeGreaterThan( 0 );
 
 				const randomIndex = Math.floor(Math.random() * count );
-				const item : CreateChatRoom = roomItems[ randomIndex ];
+				const item : CreateRoomRequest = roomItems[ randomIndex ];
 				expect( !! item ).toBeTruthy();
 				expect( !! item.roomId ).toBeTruthy();
 
@@ -291,7 +291,7 @@ describe( "ClientRoom", () =>
 			const encryptionKey = RoomUtil.generateRandomEncryptionKey();
 			const pinCode = undefined;
 
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : BobWalletObj.address,
 				encryptionKey : encryptionKey,
 				pinCode : pinCode,
@@ -342,7 +342,7 @@ describe( "ClientRoom", () =>
 			//
 			//	will create a new chat room
 			//
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : BobWalletObj.address,
 				chatType : ChatType.GROUP,
 				name : 'Group A',
@@ -404,7 +404,7 @@ describe( "ClientRoom", () =>
 			//
 			//	will create a new chat room
 			//
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : BobWalletObj.address,
 				chatType : ChatType.GROUP,
 				name : 'Group A',
@@ -466,7 +466,7 @@ describe( "ClientRoom", () =>
 			//
 			//	will create a new chat room
 			//
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : BobWalletObj.address,
 				chatType : ChatType.PRIVATE,
 				name : 'Group A',
@@ -520,7 +520,7 @@ describe( "ClientRoom", () =>
 		// 	//
 		// 	//	will create a new chat room
 		// 	//
-		// 	const createChatRoom : CreateChatRoom = {
+		// 	const createChatRoom : CreateGroupChatPayload = {
 		// 		wallet : BobWalletObj.address,
 		// 		chatType : ChatType.PRIVATE,
 		// 		name : 'Group A',
@@ -565,7 +565,7 @@ describe( "ClientRoom", () =>
 			//
 			//	will create a new chat room
 			//
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : BobWalletObj.address,
 				chatType : ChatType.PRIVATE,
 				name : 'Group A',

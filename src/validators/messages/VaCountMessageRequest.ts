@@ -1,4 +1,4 @@
-import { CountMessageRequest } from "../models/messages/CountMessageRequest";
+import { CountMessageRequest } from "../../models/messages/CountMessageRequest";
 import { TypeUtil } from "debeem-utils";
 import _ from "lodash";
 

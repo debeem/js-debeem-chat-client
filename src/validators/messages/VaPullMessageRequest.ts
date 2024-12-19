@@ -1,5 +1,4 @@
-import { PullMessageRequest } from "../models/messages/PullMessageRequest";
-import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";
+import { VaChatRoomEntityItem } from "../VaChatRoomEntityItem";
 import _ from "lodash";
 
 /**
@@ -8,10 +7,10 @@ import _ from "lodash";
 export class VaPullMessageRequest
 {
 	/**
-	 *	@param pullRequest	{PullMessageRequest}
+	 *	@param pullRequest	{any}
 	 *	@returns {string | null}
 	 */
-	static validatePullMessageRequest( pullRequest : PullMessageRequest ) : string | null
+	static validatePullMessageRequest( pullRequest : any ) : string | null
 	{
 		if ( ! pullRequest )
 		{

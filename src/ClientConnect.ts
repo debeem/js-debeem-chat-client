@@ -1,27 +1,27 @@
 import _ from "lodash";
 import { io, Socket } from "socket.io-client";
 import { ChatRoomStorageService } from "./storages/ChatRoomStorageService";
-import { JoinRoomRequest } from "./models/rooms/JoinRoomRequest";
-import { JoinRoomResponse } from "./models/rooms/JoinRoomResponse";
-import { LeaveRoomResponse } from "./models/rooms/LeaveRoomResponse";
-import { LeaveRoomRequest } from "./models/rooms/LeaveRoomRequest";
+import { JoinRoomRequest } from "./models/storages/body/rooms/JoinRoomRequest";
+import { JoinRoomResponse } from "./models/storages/body/rooms/JoinRoomResponse";
+import { LeaveRoomResponse } from "./models/storages/body/rooms/LeaveRoomResponse";
+import { LeaveRoomRequest } from "./models/storages/body/rooms/LeaveRoomRequest";
 import { ChatMessage, SendMessageRequest } from "./models/messages/SendMessageRequest";
-import { VaJoinRoomRequest } from "./validators/VaJoinRoomRequest";
-import { VaLeaveRoomRequest } from "./validators/VaLeaveRoomRequest";
-import { VaSendMessageRequest } from "./validators/VaSendMessageRequest";
+import { VaJoinRoomRequest } from "./validators/rooms/VaJoinRoomRequest";
+import { VaLeaveRoomRequest } from "./validators/rooms/VaLeaveRoomRequest";
+import { VaSendMessageRequest } from "./validators/messages/VaSendMessageRequest";
 import { ResponseCallback } from "./models/callbacks/ResponseCallback";
 import { ClientReceiveMessageCallback } from "./models/callbacks/ClientReceiveMessageCallback";
-import { ExistRoomRequest } from "./models/rooms/ExistRoomRequest";
-import { VaExistRoomRequest } from "./validators/VaExistRoomRequest";
+import { ExistRoomRequest } from "./models/storages/body/rooms/ExistRoomRequest";
+import { VaExistRoomRequest } from "./validators/rooms/VaExistRoomRequest";
 import { PullMessageRequest } from "./models/messages/PullMessageRequest";
-import { VaPullMessageRequest } from "./validators/VaPullMessageRequest";
+import { VaPullMessageRequest } from "./validators/messages/VaPullMessageRequest";
 import { PrivateMessageBuilder } from "./builders/PrivateMessageBuilder";
 import { GroupMessageBuilder } from "./builders/GroupMessageBuilder";
 import { CountMessageRequest } from "./models/messages/CountMessageRequest";
-import { VaCountMessageRequest } from "./validators/VaCountMessageRequest";
+import { VaCountMessageRequest } from "./validators/messages/VaCountMessageRequest";
 import { TestUtil } from "debeem-utils";
 import { isHexString } from "ethers";
-import { ExistRoomResponse } from "./models/rooms/ExistRoomResponse";
+import { ExistRoomResponse } from "./models/storages/body/rooms/ExistRoomResponse";
 import { SendMessageResponse } from "./models/messages/SendMessageResponse";
 import { PullMessageResponse } from "./models/messages/PullMessageResponse";
 import { CountMessageResponse } from "./models/messages/CountMessageResponse";
@@ -88,6 +88,59 @@ export class ClientConnect
 		return true;
 	}
 
+	/**
+	 * 	wait until the client connected to server successfully
+	 *
+	 * 	@implements
+	 *	@param timeout	{number} timeout in milliseconds
+	 *	@returns {Promise< void >}
+	 */
+	public waitUntilConnected( timeout : number ) : Promise<void>
+	{
+		return new Promise( async ( resolve, reject ) =>
+		{
+			try
+			{
+				if ( ! _.isNumber( timeout ) || timeout <= 0 )
+				{
+					return reject( `${ this.constructor.name }.waitUntilConnected :: invalid timeout` );
+				}
+
+				const pollInterval = 100;
+				let elapsed = 0;
+				const intervalId = setInterval( () =>
+				{
+					if ( this.socket.connected )
+					{
+						clearInterval( intervalId );
+						resolve();
+					}
+					else if ( elapsed >= timeout )
+					{
+						clearInterval( intervalId );
+						return reject( `${ this.constructor.name }.waitUntilConnected :: timeout, socket did not connect within ${ timeout }ms` );
+					}
+					elapsed += pollInterval;
+
+				}, pollInterval );
+			}
+			catch ( err )
+			{
+				reject( err );
+			}
+		} );
+	}
+
+	/**
+	 * 	close the connection to server
+	 */
+	public close()
+	{
+		if ( this.socket )
+		{
+			this.socket.disconnect();
+		}
+	}
 
 	/**
 	 * 	setup
@@ -160,7 +213,7 @@ export class ClientConnect
 			}
 			if ( _.isFunction( this.receiveMessageCallback ) )
 			{
-				//	.payload.body is encrypted string
+				//	.payload.payloads is encrypted string
 				this.receiveMessageCallback( sendMessageRequest, ( ack : any ) =>
 				{
 					console.log( `ReceiveMessageCallback ack:`, ack );

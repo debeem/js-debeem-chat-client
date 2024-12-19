@@ -4,7 +4,7 @@ import {
 	ChatRoomMemberType,
 	ChatType,
 	ClientRoom,
-	CreateChatRoom,
+	CreateRoomRequest,
 	RoomUtil
 } from "../../../src";
 import { EtherWallet } from "debeem-id";
@@ -36,7 +36,7 @@ describe( "ClientRoomExtensions", () =>
 
 		it( "should save and read room extended data", async () =>
 		{
-			const createChatRoom : CreateChatRoom = {
+			const createChatRoom : CreateRoomRequest = {
 				wallet : AliceWalletObj.address,
 				chatType : ChatType.PRIVATE,
 				//encryptionKey : encryptionKey,

@@ -1,5 +1,4 @@
-import { JoinRoomRequest } from "../models/rooms/JoinRoomRequest";
-import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";
+import { VaChatRoomEntityItem } from "../VaChatRoomEntityItem";
 
 /**
  * 	@class
@@ -7,10 +6,10 @@ import { VaChatRoomEntityItem } from "./VaChatRoomEntityItem";
 export class VaJoinRoomRequest
 {
 	/**
-	 *	@param joinRoomRequest	{JoinRoomRequest}
+	 *	@param joinRoomRequest	{any}
 	 *	@returns {string | null}
 	 */
-	static validateJoinRoomRequest( joinRoomRequest : JoinRoomRequest ) : string | null
+	static validateJoinRoomRequest( joinRoomRequest : any ) : string | null
 	{
 		if ( ! joinRoomRequest )
 		{

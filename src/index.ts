@@ -18,14 +18,14 @@ export * from "./models/messages/PullMessageResponse";
 export * from "./models/messages/CountMessageRequest";
 export * from "./models/messages/CountMessageResponse";
 
-export * from "./models/rooms/CreateChatRoom";
-export * from "./models/rooms/ExistRoomRequest";
-export * from "./models/rooms/ExistRoomResponse";
-export * from "./models/rooms/InviteRequest";
-export * from "./models/rooms/JoinRoomRequest";
-export * from "./models/rooms/JoinRoomResponse";
-export * from "./models/rooms/LeaveRoomRequest";
-export * from "./models/rooms/LeaveRoomResponse";
+export * from "./models/storages/body/rooms/CreateGroupChatPayload";
+export * from "./models/storages/body/rooms/ExistRoomRequest";
+export * from "./models/storages/body/rooms/ExistRoomResponse";
+export * from "./models/storages/body/rooms/InviteRequest";
+export * from "./models/storages/body/rooms/JoinRoomRequest";
+export * from "./models/storages/body/rooms/JoinRoomResponse";
+export * from "./models/storages/body/rooms/LeaveRoomRequest";
+export * from "./models/storages/body/rooms/LeaveRoomResponse";
 
 export * from "./models/BaseResponse";
 export * from "./models/PaginationOptions";
@@ -66,13 +66,13 @@ export * from "./cryptos/PrivateMessageCrypto";
 export * from "./validators/VaChatHistoryEntityItem";
 export * from "./validators/VaChatRoomEntityItem";
 export * from "./validators/VaChatRoomMember";
-export * from "./validators/VaCreateChatRoom";
-export * from "./validators/VaExistRoomRequest";
-export * from "./validators/VaJoinRoomRequest";
-export * from "./validators/VaLeaveRoomRequest";
-export * from "./validators/VaSendMessageRequest";
-export * from "./validators/VaPullMessageRequest";
-export * from "./validators/VaCountMessageRequest";
+export * from "./validators/storages/rooms/VaStorageCreateRoom";
+export * from "./validators/rooms/VaExistRoomRequest";
+export * from "./validators/rooms/VaJoinRoomRequest";
+export * from "./validators/rooms/VaLeaveRoomRequest";
+export * from "./validators/messages/VaSendMessageRequest";
+export * from "./validators/messages/VaPullMessageRequest";
+export * from "./validators/messages/VaCountMessageRequest";
 
 
 /**
